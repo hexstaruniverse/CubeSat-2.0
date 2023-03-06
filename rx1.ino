@@ -1,5 +1,4 @@
 /*
- * Arduino Wireless Weather Station
  * Receiver Code
  *
  * 
