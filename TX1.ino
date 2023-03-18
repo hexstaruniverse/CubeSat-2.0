@@ -1,14 +1,7 @@
 /*
  * Arduino Wireless Weather Station
  * Transmitter Code
- *
- * 
- * by learnelectronics
- * 21 MAR 2017
- * 
- * www.youtube.com/c/learnelectronics
- * arduino0169@gmail.com
- *
+ 
  */
 
 //-----------------------------------------------------------------------------------------------------
