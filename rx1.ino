@@ -1,18 +1,3 @@
-/*
- * Receiver Code
- *
- * 
- * by Hex-Star Universe
- *
- */
-
-
-
-
-//-----------------------------------------------------------------------------------------------------
-//                                            LIBRARIES
-//-----------------------------------------------------------------------------------------------------
-
 #include <VirtualWire.h>
 
 
@@ -45,6 +30,8 @@ struct package                                      //Struct Type Name
   int x, y, z;
   int azimuth;
   int heading;
+  double lat;
+  double lon;
 };
 
 
@@ -115,44 +102,47 @@ if (vw_have_message())                              //Check for activity
     Serial.println("%");                            //print units to serial port with CR
 
 
-    Serial.print("X ");                      //print header to serial port
-    Serial.print(data.x);                    //print humidity to serial port
+    Serial.print("X ");                    
+    Serial.print(data.x);                    
     Serial.println("uT"); 
 
-    Serial.print("Y ");                      //print header to serial port
-    Serial.print(data.y);                    //print humidity to serial port
+    Serial.print("Y ");                      
+    Serial.print(data.y);                    
     Serial.println("uT");
 
-    Serial.print("Z");                      //print header to serial port
-    Serial.print(data.z);                    //print humidity to serial port
+    Serial.print("Z");                      
+    Serial.print(data.z);                    
     Serial.println("uT");
 
-    Serial.print("Azimuth ");                      //print header to serial port
-    Serial.print(data.azimuth);                    //print humidity to serial port
+    Serial.print("Azimuth ");                      
+    Serial.print(data.azimuth);                    
     Serial.println("");
 
-    Serial.print("Heading ");                      //print header to serial port
-    Serial.print(data.heading);                    //print humidity to serial port
+    Serial.print("Heading ");                      
+    Serial.print(data.heading);                    
     Serial.println("");
 
-    Serial.print("Ax ");                      //print header to serial port
-    Serial.print(data.accex);                    //print humidity to serial port
+    Serial.print("Ax ");                      
+    Serial.print(data.accex);                    
     Serial.println("");
 
-    Serial.print("Ay ");                      //print header to serial port
-    Serial.print(data.accey);                    //print humidity to serial port
+    Serial.print("Ay ");                      
+    Serial.print(data.accey);                    
     Serial.println("");
 
-    Serial.print("Az ");                      //print header to serial port
-    Serial.print(data.accez);                    //print humidity to serial port
+    Serial.print("Az ");                      
+    Serial.print(data.accez);                   
     Serial.println("");
 
+    Serial.print("loc:");
+    Serial.print(data.lat,6);
+    Serial.print(","); 
+    Serial.print(data.lon,6);
+    Serial.println("");
     
-    Serial.println("___________");         
+    Serial.println("_____");         
     
     delay(1);                                     //wait 100 miliseconds
     digitalWrite(led,LOW);                          //led off
   }
 }
-
-
