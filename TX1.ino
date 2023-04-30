@@ -1,18 +1,10 @@
-/*
- * Arduino Wireless Weather Station
- * Transmitter Code
- 
- */
-
-//-----------------------------------------------------------------------------------------------------
-//                                              LIBRARIES
-//-----------------------------------------------------------------------------------------------------
-
 #include <VirtualWire.h>                            //Library for the Radios
 #include "DHT.h"                                    //Library for the DHT11 Sensor
 #include <Adafruit_BMP085.h>
 #include <Adafruit_MPU6050.h>
 #include <MechaQMC5883.h>
+#include <TinyGPS++.h>
+#include <SoftwareSerial.h>
 //-----------------------------------------------------------------------------------------------------
 //                                               DEFINES
 //-----------------------------------------------------------------------------------------------------
@@ -24,7 +16,9 @@
 //                                              VARIABLES
 //-----------------------------------------------------------------------------------------------------
 const int led_pin = 13;                             //LED on D13
-const int transmit_pin = 12;                        //Radio input on D12
+const int transmit_pin = 12; 
+static const int RXPin = 3, TXPin = 4;// Here we make pin 4 as RX of arduino & pin 3 as TX of arduino 
+static const uint32_t GPSBaud = 9600;                       //Radio input on D12
 //-----------------------------------------------------------------------------------------------------
 //                                           DATA STRUCTURES
 //-----------------------------------------------------------------------------------------------------
@@ -46,6 +40,8 @@ struct package                                      //Struct Type Name
   int x, y, z;
   int azimuth;
   int heading;
+  double lat;
+  double lon;
 };
 
 
@@ -59,6 +55,8 @@ DHT dht(DHTPIN, DHTTYPE);                           //Create instance of DHT cal
 Adafruit_BMP085 bmp;
 Adafruit_MPU6050 mpu;
 MechaQMC5883 qmc;
+TinyGPSPlus gps;
+SoftwareSerial ss(RXPin, TXPin);
 
 //-----------------------------------------------------------------------------------------------------
 //                                                SETUP
@@ -78,6 +76,8 @@ void setup()
 
   // set filter bandwidth to 21 Hz
     mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
+    Serial.begin(9600);
+    ss.begin(GPSBaud);
 }
 
 //-----------------------------------------------------------------------------------------------------
@@ -96,9 +96,32 @@ void loop()
   delay(1);                                      //wait 2 seconds
   altitude = bmp.readAltitude();
   pressure = bmp.readPressure();
-  
-  
+  while (ss.available() > 0)
+    if (gps.encode(ss.read()))
+      displayInfo();
 
+  if (millis() > 5000 && gps.charsProcessed() < 10)
+  {
+    Serial.println(F("No GPS detected: check wiring."));
+    while(true);
+  }
+
+}
+
+void displayInfo()
+{
+  Serial.print(F("Location: ")); 
+  if (gps.location.isValid())
+  {
+    data.lat = gps.location.lat();
+    data.lon = gps.location.lng();
+    
+  }
+  else
+  {
+    Serial.print(F("INVALID"));
+  }
+  Serial.println();
 }
 //-----------------------------------------------------------------------------------------------------
 //                                              FUNCTIONS
@@ -115,6 +138,8 @@ void readSensor()                                   //readSensor function
  mpu.begin();
  bmp.begin();
  dht.begin();                                       //initialize dht
+ ss.begin(GPSBaud);
+
  
  delay(1);                                       //wait 1 second
  data.humidity = dht.readHumidity();                //get humidity & store in Struct variable data.humidity
@@ -133,6 +158,6 @@ void readSensor()                                   //readSensor function
  data.z = z;
  data.azimuth = azimuth;
  data.heading = heading;
-
+ 
 
 }
