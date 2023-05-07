@@ -96,12 +96,34 @@ void loop()
   delay(1);                                      //wait 2 seconds
   altitude = bmp.readAltitude();
   pressure = bmp.readPressure();
-  
+  // For GPS Comment off this code.
+  //while (ss.available() > 0)
+   // if (gps.encode(ss.read()))
+     // displayInfo();
+
+ // if (millis() > 5000 && gps.charsProcessed() < 10)
+  //{
+   // Serial.println(F("No GPS detected: check wiring."));
+    //while(true);
+  //}
+
 }
 
-
-
-
+//void displayInfo()
+//{
+  //Serial.print(F("Location: ")); 
+  //if (gps.location.isValid())
+  //{
+    //data.lat = gps.location.lat();
+    //data.lon = gps.location.lng();
+    
+  //}
+  //else
+  //{
+    //Serial.print(F("INVALID"));
+  //}
+  //Serial.println();
+//}
 //-----------------------------------------------------------------------------------------------------
 //                                              FUNCTIONS
 //-----------------------------------------------------------------------------------------------------
